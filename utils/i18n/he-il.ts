@@ -5,6 +5,7 @@ export const isrealHebrew = {
   [AppText.GroupNameLabel]: "שם המדור",
   [AppText.Update]: "עדכן",
   [AppText.SendToWhatApp]: "שלח לווסטאפ",
+  [AppText.AddNewRow]: "הוסף שורה חדשה",
 };
 
 export default isrealHebrew;

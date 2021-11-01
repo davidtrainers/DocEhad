@@ -10,12 +10,12 @@ import {
   Button,
 } from "react-native";
 import { Table, Row, TableWrapper, Cell } from "react-native-table-component";
-import { save, getValueFor } from "../cache/localStorage";
+import { save, getValueFor } from "../../../cache/localStorage";
 import {
   INamesStatus,
   IPeopleListProps,
   ITableData,
-} from "../interfaces/IPeopleList";
+} from "../../../interfaces/IPeopleList";
 
 const PeopleList: React.FC<IPeopleListProps> = (props: IPeopleListProps) => {
   const { names, setNames } = props;
@@ -27,10 +27,9 @@ const PeopleList: React.FC<IPeopleListProps> = (props: IPeopleListProps) => {
       "לימודים",
       "ת. חוץ",
       "חופש",
-      'אבט"ש',
       "סיפוח",
       "אבטש",
-      "חופשת לידה",
+      "איו דיווח",
     ],
     widthArr: [20, 18, 18, 18, 18, 18, 18, 18, 18],
   });
@@ -84,13 +83,12 @@ const PeopleList: React.FC<IPeopleListProps> = (props: IPeopleListProps) => {
           {names.map((rowData, index) => (
             <TableWrapper
               key={index}
-              style={[
-                styles.row,
-                {
-                  backgroundColor:
-                    index % 2 == 1 ? "rgba(54, 48, 74,0.21)" : "white",
-                },
-              ]}
+              style={{
+                height: 45,
+                flexDirection: "row",
+                backgroundColor:
+                  index % 2 == 1 ? "rgba(54, 48, 74,0.21)" : "white",
+              }}
             >
               {state.tableHead.map((cellData, cellIndex) => (
                 <Cell

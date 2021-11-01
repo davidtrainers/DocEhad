@@ -3,4 +3,5 @@ export enum AppText {
   GroupNameLabel = "שם מדור:",
   Update = "עדכן",
   SendToWhatApp = "שלח לווסטאפ",
+  AddNewRow = "הוסף שורה חדשה",
 }

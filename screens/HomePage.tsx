@@ -5,19 +5,17 @@ import {
   KeyboardAvoidingView,
   Linking,
   Platform,
-  ScrollView,
   StyleSheet,
-  Text,
-  Image,
-  TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
-import PeopleList from "../components/PeopleList";
+import PeopleList from "../components/HomePage/PeopleList/PeopleList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getValueFor, save } from "../cache/localStorage";
 import i18n, { tokens } from "../utils/i18n";
-import { Ionicons } from "@expo/vector-icons";
+import Header from "../UI/Header";
+import GroupNameSection from "../components/HomePage/GroupNameSection";
+import { PrimaryColor } from "../consts/Colors";
+import RNButton from "../UI/RNButton";
 
 interface INamesStatus {
   name: string;
@@ -25,18 +23,14 @@ interface INamesStatus {
 }
 
 const HomePage: React.FC = () => {
-  const [madorName, setMadorName] = useState<string>();
+  const [madorName, setMadorName] = useState<string>("");
 
-  const [names, setNames] = useState<INamesStatus[]>([
-    { name: "הוסף", status: "" },
-  ]);
+  const [names, setNames] = useState<INamesStatus[]>([]);
 
-  const { ApplicationName, GroupNameLabel, SendToWhatApp, Update } =
-    tokens.app.intro;
-  const applicationName = i18n.t(ApplicationName);
-  const groupNameLabel = i18n.t(GroupNameLabel);
+  const { SendToWhatApp, Update, AddNewRow } = tokens.app.intro;
   const sendToWhatApp = i18n.t(SendToWhatApp);
   const update = i18n.t(Update);
+  const addNewRow = i18n.t(AddNewRow);
 
   const onChangeMadorText = (newMadorName: string) => {
     setMadorName(newMadorName);
@@ -88,107 +82,41 @@ const HomePage: React.FC = () => {
       <SafeAreaView style={styles.container}>
         <StatusBar />
         <View style={styles.header}>
-          <View style={styles.imageIconContainer}>
-            <Image
-              height={30}
-              width={30}
-              style={styles.imageIcon}
-              source={require(`../assets/icon.png`)}
-            />
-          </View>
-          <View style={styles.headerTextContainer}>
-            <Text style={styles.headerText}>{applicationName}</Text>
-          </View>
+          <Header />
         </View>
         <View style={styles.madorNameContainer}>
-          <View
-            style={{
-              flex: 1,
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <View
-              style={{
-                height: "30%",
-                width: "60%",
-                borderTopRightRadius: 5,
-                borderTopLeftRadius: 5,
-                backgroundColor: "rgb(54, 48, 74)",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: Dimensions.get("screen").fontScale * 20,
-                  fontWeight: "bold",
-                  color: "white",
-                }}
-              >
-                {groupNameLabel}
-              </Text>
-            </View>
-            <View
-              style={{
-                height: "30%",
-                width: "60%",
-                borderBottomRightRadius: 5,
-                borderBottomLeftRadius: 5,
-                borderColor: "rgb(54, 48, 74)",
-                borderWidth: 2,
-              }}
-            >
-              <TextInput
-                onChangeText={onChangeMadorText}
-                value={madorName}
-                style={styles.madorName}
-              />
-            </View>
-          </View>
+          <GroupNameSection
+            onChangeMadorText={onChangeMadorText}
+            madorName={madorName}
+          />
         </View>
         <View style={styles.tablePeopleContainer}>
           <PeopleList names={names} setNames={setNames} />
         </View>
         <View style={styles.addNewRowContainer}>
-          <TouchableOpacity onPress={AddName} style={styles.addNewRow}>
-            <Text style={styles.addNewRowLabel}>הוסף שורה חדשה</Text>
-          </TouchableOpacity>
+          <RNButton
+            text={addNewRow}
+            onPress={AddName}
+            buttonStyle={styles.addNewRow}
+            textStyle={styles.addNewRowLabel}
+          />
         </View>
         <View style={styles.actionsContainer}>
-          <TouchableOpacity
+          <RNButton
+            text={update}
             onPress={saveOnLocalStorage}
-            style={styles.saveSendData}
-          >
-            <Text style={styles.textSaveData}>{update}</Text>
-            <Ionicons name="sync-outline" size={32} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity
+            iconName={"sync-outline"}
+            buttonStyle={styles.saveSendData}
+            textStyle={styles.textSaveData}
+          />
+          <RNButton
+            text={sendToWhatApp}
             onPress={sendDataStatus}
-            style={styles.saveSendData}
-          >
-            <Text style={styles.textSaveData}>{sendToWhatApp}</Text>
-            <Ionicons name="send" size={32} color="white" />
-          </TouchableOpacity>
+            iconName={"send"}
+            buttonStyle={styles.saveSendData}
+            textStyle={styles.textSaveData}
+          />
         </View>
-        {/* <View style={styles.peoplelist}>
-            <PeopleList names={names} setNames={setNames} />
-          </View>
-          <View style={styles.sendWhatappContainer}>
-            <TouchableOpacity
-              onPress={saveOnLocalStorage}
-              style={styles.saveDataButton}
-            >
-              <Text style={styles.textSaveData}>שמור נתונים</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={sendDataStatus}
-              style={styles.sendToWhatapp}
-            >
-              <Text style={styles.textToWhatapp}>שלח לווטסאפ</Text>
-            </TouchableOpacity>
-          </View> */}
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
@@ -203,29 +131,11 @@ const styles = StyleSheet.create({
     display: "flex",
     flex: 1.6,
     flexDirection: "row",
-    backgroundColor: "rgb(54, 48, 74)",
+    backgroundColor: PrimaryColor,
   },
-  imageIconContainer: {
-    width: "15%",
+  madorNameContainer: {
     display: "flex",
-    justifyContent: "center",
-    alignContent: "center",
-  },
-  imageIcon: {
-    height: 55,
-    width: 55,
-    borderRadius: 28,
-    marginHorizontal: 5,
-  },
-  headerTextContainer: {
-    display: "flex",
-    justifyContent: "center",
-  },
-  headerText: {
-    fontWeight: "bold",
-    fontFamily: "sans-serif",
-    color: "white",
-    fontSize: Dimensions.get("screen").fontScale * 24,
+    flex: 2.4,
   },
   addNewRowContainer: { flex: 1 },
   addNewRow: {
@@ -259,34 +169,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
   },
-  madorNameContainer: {
-    display: "flex",
-    flex: 2.4,
-  },
   peoplelist: {
     flex: 8,
     flexDirection: "row",
     width: "100%",
   },
-  sendWhatappContainer: {
-    flex: 1,
-    alignSelf: "center",
-    flexDirection: "row",
-    width: "90%",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  saveDataButton: {
-    width: "45%",
-    height: "60%",
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-  },
   saveSendData: {
     width: "45%",
-    height: "65%",
+    height: "60%",
     flexDirection: "row",
     borderRadius: 10,
     alignItems: "center",
@@ -299,15 +189,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginHorizontal: 10,
     color: "white",
-  },
-  textToWhatapp: {
-    fontSize: Dimensions.get("screen").fontScale * 15,
-    fontWeight: "bold",
-    color: "white",
-  },
-  madorName: {
-    color: "rgb(54, 48, 74)",
-    textAlign: "center",
   },
   madorText: {
     color: "#FFF",
